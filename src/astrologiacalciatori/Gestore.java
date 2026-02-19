@@ -16,7 +16,7 @@ public class Gestore {
     private String fileCalciatore, fileAstrologia;
     private ArrayList<Calciatore> calciatori;
     private ArrayList<Zodiaco> zodiaco;
-    private ArrayList<String> scala;
+    private ArrayList<Integer> scala;
     
     public Gestore(String fc, String fa){
         fg = new FileManager();
@@ -51,7 +51,53 @@ public class Gestore {
             dataEnd = Integer.parseInt(z.getDataEnd());
             for(Calciatore c : calciatori){
                 nascita = Integer.parseInt(c.getDataNascita());
+                if(nascita >= dataStart && nascita <= dataEnd){
+                    c.setZodiaco(z.getNome());
+                }
             }
         }
+    }
+    
+    public void calcolaGoal(){
+        int i = 0, goal;
+        for(Zodiaco z : zodiaco){
+            goal = 0;
+            for(Calciatore c : calciatori){
+                if(c.getZodiaco().equals(z.getNome())){
+                    goal += c.getGoal();
+                }
+            }
+            scala.set(i, goal);
+            i++;
+        }
+    }
+    
+    public void stampa(){
+        int max = 0;
+        for(int s : scala){
+            if(s > max){
+                max = s;
+            }
+        }
+        
+        String s;
+        ArrayList<String> risultato = new ArrayList<>();
+        for(int i = 0; i < zodiaco.size(); i++){
+            s = asterischi(max, scala.get(i));
+            risultato.add(s);
+        }
+        
+        for(int i = 0; i < zodiaco.size(); i++){
+            System.out.println(zodiaco.get(i).getNome() + "(" + scala.get(i) + ")" + risultato.get(i));
+        }
+    }
+    
+    public String asterischi(int max, int n){
+        int size = 50 * n / max;
+        String s = "";
+        for(int i = 0; i < size; i++){
+            s += "*";
+        }
+        return s;
     }
 }

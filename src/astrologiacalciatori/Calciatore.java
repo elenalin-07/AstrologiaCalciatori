@@ -22,6 +22,9 @@ public class Calciatore {
     public String formatterData(String s){
         String data = s.replace("/", "");
         data = data.substring(0, 4);
+        String g = data.substring(0, 2);
+        String m = data.substring(2, 4);
+        data = m + g;
         return data;
     }
     
