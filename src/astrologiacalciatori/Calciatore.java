@@ -28,6 +28,10 @@ public class Calciatore {
         return data;
     }
     
+    public String getNome(){
+        return nome;
+    }
+    
     public int getGoal(){
         return goal;
     }
@@ -36,7 +40,7 @@ public class Calciatore {
         return dataNascita;
     }
     
-        public void setZodiaco(String z){
+    public void setZodiaco(String z){
         zodiaco = z;
     }
     

@@ -6,6 +6,7 @@ package astrologiacalciatori;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -16,7 +17,7 @@ public class Gestore {
     private String fileCalciatore, fileAstrologia;
     private ArrayList<Calciatore> calciatori;
     private ArrayList<Zodiaco> zodiaco;
-    private ArrayList<Integer> scala;
+    private int[] scala;
     
     public Gestore(String fc, String fa){
         fg = new FileManager();
@@ -24,11 +25,11 @@ public class Gestore {
         fileAstrologia = fa;
         calciatori = new ArrayList<>();
         zodiaco = new ArrayList<>();
-        scala = new ArrayList<>();
+        scala = new int[12];
     }
     
     public void readFiles() throws IOException{
-        ArrayList<String> lines =  new ArrayList<>();
+        ArrayList<String> lines = new ArrayList<>();
         lines = fg.readFile(fileCalciatore);
         
         for(String line : lines){
@@ -37,7 +38,6 @@ public class Gestore {
         }
         
         lines = fg.readFile(fileAstrologia);
-        
         for(String line : lines){
             String[] dati = line.split(",");
             zodiaco.add(new Zodiaco(dati));
@@ -45,15 +45,20 @@ public class Gestore {
     }
     
     public void setZodiaco(){
-        int dataStart, dataEnd, nascita;
+        String dataStart, dataEnd, nascita;
+        int isBefore, isAfter, i = 0;
         for(Zodiaco z : zodiaco){
-            dataStart = Integer.parseInt(z.getDataStart());
-            dataEnd = Integer.parseInt(z.getDataEnd());
+            dataStart = z.getDataStart();
+            dataEnd = z.getDataEnd();
             for(Calciatore c : calciatori){
-                nascita = Integer.parseInt(c.getDataNascita());
-                if(nascita >= dataStart && nascita <= dataEnd){
+                nascita = c.getDataNascita();
+                isAfter = nascita.compareTo(dataStart);
+                isBefore = nascita.compareTo(dataEnd);
+                if(isAfter >= 0 && isBefore <= 0){
                     c.setZodiaco(z.getNome());
                 }
+                else if(nascita.compareTo("0120") <= 0 || nascita.compareTo("1222") >= 0)
+                    c.setZodiaco("Capricorno");
             }
         }
     }
@@ -67,7 +72,7 @@ public class Gestore {
                     goal += c.getGoal();
                 }
             }
-            scala.set(i, goal);
+            scala[i] = goal;
             i++;
         }
     }
@@ -79,16 +84,19 @@ public class Gestore {
                 max = s;
             }
         }
-        
         String s;
         ArrayList<String> risultato = new ArrayList<>();
         for(int i = 0; i < zodiaco.size(); i++){
-            s = asterischi(max, scala.get(i));
+            s = asterischi(max, scala[i]);
             risultato.add(s);
         }
-        
+        ArrayList<String> risultatoFinal  = new ArrayList<>();
         for(int i = 0; i < zodiaco.size(); i++){
-            System.out.println(zodiaco.get(i).getNome() + "(" + scala.get(i) + ")" + risultato.get(i));
+            risultatoFinal.add(zodiaco.get(i).getNome() + "(" + scala[i] + ")" + risultato.get(i));
+        }
+        risultatoFinal.sort(Comparator.comparingInt(String::length).reversed());
+        for(String line : risultatoFinal){
+            System.out.println(line);
         }
     }
     
