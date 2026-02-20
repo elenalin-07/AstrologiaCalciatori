@@ -16,6 +16,14 @@ import java.util.ArrayList;
  */
 public class FileManager {
     
+    /**
+     * Legge il file
+     * 
+     * @param filePath il percorso del file in cui viene letto
+     * @return ArrayList<String> contenente i dati del file
+     * @throws FileNotFoundException se il file non esiste o non è accessibile
+     * @throws IOException se esiste errore di input/output
+     */
     public ArrayList<String> readFile(String filePath) throws FileNotFoundException, IOException{
         ArrayList<String> lines = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){

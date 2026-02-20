@@ -14,6 +14,7 @@ public class AstrologiaCalciatori {
 
     /**
      * @param args the command line arguments
+     * @throws IOException se esiste errore di input/output
      */
     public static void main(String[] args) throws IOException {
         Gestore g = new Gestore("sportivi.csv", "zodiaco.csv");
@@ -21,6 +22,8 @@ public class AstrologiaCalciatori {
         g.readFiles();
         g.setZodiaco();
         g.calcolaGoal();
+        g.ordinaZodiaco();
+        g.istogramma();
         g.stampa();
     }
     

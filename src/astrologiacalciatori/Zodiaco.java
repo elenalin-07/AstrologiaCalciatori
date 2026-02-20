@@ -11,12 +11,22 @@ package astrologiacalciatori;
 public class Zodiaco {
     private String nome, dataStart, dataEnd;
     
+    /**
+     * 
+     * @param dati contennente dei dati del segno zodiacale
+     */
     public Zodiaco(String[] dati){
         nome = dati[0];
         dataStart = formatterData(dati[1]);
         dataEnd = formatterData(dati[2]);
     }
     
+    /**
+     * Converte una data nel formato gg/mm/aa in una stringa mmgg
+     * 
+     * @param s la data di nascita in formato gg/mm/aaaa
+     * @return la data di nascita in formatto mmgg
+     */
     public String formatterData(String s){
         String data = s.replace("/", "");
         data = data.substring(0, 4);

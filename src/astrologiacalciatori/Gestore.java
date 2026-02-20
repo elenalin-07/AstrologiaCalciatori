@@ -6,6 +6,8 @@ package astrologiacalciatori;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -18,7 +20,14 @@ public class Gestore {
     private ArrayList<Calciatore> calciatori;
     private ArrayList<Zodiaco> zodiaco;
     private int[] scala;
+    private ArrayList<String> output;
     
+    /**
+     * Costrutore
+     * 
+     * @param fc il percorso del file calciatori
+     * @param fa il percorso del file astrologia(zodiaco)
+     */
     public Gestore(String fc, String fa){
         fg = new FileManager();
         fileCalciatore = fc;
@@ -26,8 +35,14 @@ public class Gestore {
         calciatori = new ArrayList<>();
         zodiaco = new ArrayList<>();
         scala = new int[12];
+        output = new ArrayList<>();
     }
     
+    /**
+     * Legge i dati di file
+     * 
+     * @throws IOException se esiste errore di input/output
+     */
     public void readFiles() throws IOException{
         ArrayList<String> lines = new ArrayList<>();
         lines = fg.readFile(fileCalciatore);
@@ -44,6 +59,9 @@ public class Gestore {
         }
     }
     
+    /**
+     * Assegna a ciascun calciatore il segno zodiacale corrispondente
+     */
     public void setZodiaco(){
         String dataStart, dataEnd, nascita;
         int isBefore, isAfter, i = 0;
@@ -63,6 +81,9 @@ public class Gestore {
         }
     }
     
+    /**
+     * Calcola il numero di goal totale di ciascun segno zodiacale
+     */
     public void calcolaGoal(){
         int i = 0, goal;
         for(Zodiaco z : zodiaco){
@@ -77,7 +98,50 @@ public class Gestore {
         }
     }
     
-    public void stampa(){
+    /**
+     * Ordina l'array dei goal in ordine crescente e salva le posizioni originali degli elementi dopo l’ordinamento
+     * 
+     * @return ArrayList<Integer> contenente le posizioni originali degli elementi dopo l’ordinamento
+     */
+    public ArrayList<Integer> ordinaESalvaPos(){
+        int[] originale = Arrays.copyOf(scala, scala.length);
+        
+        Arrays.sort(scala);
+        
+        ArrayList<Integer> posizioni = new ArrayList<>();
+        
+        for(int i = 0; i < scala.length; i++){
+            for(int j = 0; j < originale.length; j++){
+                if(scala[i] == originale[j]){
+                    posizioni.add(j);
+                }
+            }
+        }
+        return posizioni;
+    }
+    
+    /**
+     * Ordina la lista dei segni zodiacali in base al numero di goal in ordine crescente
+     */
+    public void ordinaZodiaco(){
+        ArrayList<Zodiaco> zodiacoOrdinato = new ArrayList<>();
+        ArrayList<Integer> posizioni = ordinaESalvaPos();
+        
+        for(int i : posizioni){
+            zodiacoOrdinato.add(zodiaco.get(i));
+        }
+        
+        for(int i = 0; i < zodiaco.size(); i++){
+            zodiaco.set(i, zodiacoOrdinato.get(i));
+        }
+    }
+    
+    /**
+     * Genera un ArrayList di stringhe contenenti le barre di asterischi
+     * 
+     * @return ArrayList<String> contenente le barre di asterischi
+     */
+    public ArrayList<String> barreAsterischi(){
         int max = 0;
         for(int s : scala){
             if(s > max){
@@ -85,21 +149,36 @@ public class Gestore {
             }
         }
         String s;
-        ArrayList<String> risultato = new ArrayList<>();
+        ArrayList<String> barreAsterischi = new ArrayList<>();
         for(int i = 0; i < zodiaco.size(); i++){
             s = asterischi(max, scala[i]);
-            risultato.add(s);
+            barreAsterischi.add(s);
         }
-        ArrayList<String> risultatoFinal  = new ArrayList<>();
+        
+        return barreAsterischi;
+    }
+    
+    public void istogramma(){
+        ArrayList<String> istogramma = barreAsterischi();
+        
         for(int i = 0; i < zodiaco.size(); i++){
-            risultatoFinal.add(zodiaco.get(i).getNome() + "(" + scala[i] + ")" + risultato.get(i));
-        }
-        risultatoFinal.sort(Comparator.comparingInt(String::length).reversed());
-        for(String line : risultatoFinal){
-            System.out.println(line);
+            output.add(zodiaco.get(i).getNome() + "    \t(" + scala[i] + ")" + istogramma.get(i));
+        }      
+    }
+    
+    public void stampa(){
+        for(int i = output.size() - 1; i >= 0; i--){
+            System.out.println(output.get(i));
         }
     }
     
+    /**
+     * Costruisce un String contenente gli asterischi dell’istogramma che la barra più lunga abbia 50 asterischi 
+     * 
+     * @param max il numero massimo di goal tra tutti i segni
+     * @param n il numero di goal del segno
+     * @return una String contenente solo gli asterischi dell’istogramma, la cui lunghezza è proporzionale al numero di goal
+     */
     public String asterischi(int max, int n){
         int size = 50 * n / max;
         String s = "";

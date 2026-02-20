@@ -19,6 +19,12 @@ public class Calciatore {
         dataNascita = formatterData(dati[3]);
     }
     
+    /**
+     * Converte una data nel formato gg/mm/aa in una stringa mmgg
+     * 
+     * @param s la data di nascita in formato gg/mm/aaaa
+     * @return la data di nascita in formatto mmgg
+     */
     public String formatterData(String s){
         String data = s.replace("/", "");
         data = data.substring(0, 4);
