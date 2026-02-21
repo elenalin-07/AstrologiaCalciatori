@@ -25,6 +25,9 @@ public class AstrologiaCalciatori {
         g.ordinaZodiaco();
         g.istogramma();
         g.stampa();
+        
+        Form f = new Form();
+        f.setVisible(true);
     }
     
 }

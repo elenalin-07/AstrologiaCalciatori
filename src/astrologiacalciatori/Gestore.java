@@ -21,6 +21,7 @@ public class Gestore {
     private ArrayList<Zodiaco> zodiaco;
     private int[] scala;
     private ArrayList<String> output;
+    private int max;
     
     /**
      * Costrutore
@@ -142,12 +143,7 @@ public class Gestore {
      * @return ArrayList<String> contenente le barre di asterischi
      */
     public ArrayList<String> barreAsterischi(){
-        int max = 0;
-        for(int s : scala){
-            if(s > max){
-                max = s;
-            }
-        }
+        setMax();
         String s;
         ArrayList<String> barreAsterischi = new ArrayList<>();
         for(int i = 0; i < zodiaco.size(); i++){
@@ -186,5 +182,25 @@ public class Gestore {
             s += "*";
         }
         return s;
+    }
+    
+    public int[] getScala(){
+        return scala;
+    }
+    
+    public ArrayList<Zodiaco> getZodiaco(){
+        return zodiaco;
+    }
+    
+    public void setMax(){
+        max = 0;
+        for(int s : scala){
+            if(s > max){
+                max = s;
+            }
+        }
+    }
+    public int getMax(){
+        return max;
     }
 }
