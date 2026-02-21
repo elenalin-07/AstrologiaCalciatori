@@ -72,6 +72,12 @@ public class Form extends javax.swing.JFrame {
         
     }
     
+    /**
+     * Aggiorna il progress bar
+     * 
+     * @param p la barra da aggiornare
+     * @param g il numero tatole di goal da raggiungere
+     */
     public void setProgressBar(JProgressBar p, int g){
         new Thread(() -> {
             p.setMaximum(max);
@@ -91,6 +97,9 @@ public class Form extends javax.swing.JFrame {
     }).start();
     }
     
+    /**
+     * Aggiorna le euchette e imposta i progress bar
+     */
     public void setLabels(){
         for(int i = 0; i < zodiaco.size(); i++){
             zodiacoLabel.get(i).setText(zodiaco.get(zodiaco.size() - i - 1).getNome());
